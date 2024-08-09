@@ -25,11 +25,11 @@ public class User implements UserDetails {
      @Column(name = "id")
     private Integer Id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     @NonNull
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     @NonNull
     private String password;
 
