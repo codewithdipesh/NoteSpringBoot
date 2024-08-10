@@ -26,6 +26,16 @@ public class publicController {
         return new ResponseEntity<>(new ApiResponse<>("User registered successfully", response.getToken(), HttpStatus.OK.value()),
                 HttpStatus.OK);
     }
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<String>> loginUser(@RequestBody User user) {
+        if(user.getUsername() == null || user.getPassword() == null){
+            throw new ValidationException("Username and password are required");
+        }
+        AuthenticationResponse response = userService.login(user);
+        return new ResponseEntity<>(new ApiResponse<>("User loggedIn successfully", response.getToken(), HttpStatus.OK.value()),
+                HttpStatus.OK);
+    }
+
 
     @GetMapping("/health-check")
     public ResponseEntity<String> healthcheck() {

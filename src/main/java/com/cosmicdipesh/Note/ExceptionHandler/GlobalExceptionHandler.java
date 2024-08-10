@@ -1,6 +1,7 @@
 package com.cosmicdipesh.Note.ExceptionHandler;
 
 import com.cosmicdipesh.Note.entity.ApiResponse;
+import com.cosmicdipesh.Note.entity.InvalidJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +32,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleValidationException(ValidationException ex) {
         ApiResponse<String> response = new ApiResponse<>(ex.getMessage(), null, HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<ApiResponse<String>> handleInvalidJwtException(InvalidJwtException ex) {
+        ApiResponse<String> response = new ApiResponse<>(ex.getMessage(), null, HttpStatus.UNAUTHORIZED.value());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
 

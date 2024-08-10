@@ -1,12 +1,16 @@
 package com.cosmicdipesh.Note.service;
 
 import com.cosmicdipesh.Note.ExceptionHandler.ExistingUserException;
+import com.cosmicdipesh.Note.ExceptionHandler.ValidationException;
+import com.cosmicdipesh.Note.config.SecurityConfig;
 import com.cosmicdipesh.Note.entity.AuthenticationResponse;
 import com.cosmicdipesh.Note.entity.Role;
 import com.cosmicdipesh.Note.entity.User;
 import com.cosmicdipesh.Note.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.configurers.SecurityContextConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,12 +54,17 @@ public class UserService {
                         request.getUsername(),
                         request.getPassword())
         );
-       User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-       String token = jwtService.generateToken(user);
-       return new AuthenticationResponse(token);
+       Optional<User> user = userRepository.findByUsername(request.getUsername());
+       if(user.isPresent()){
+           String token = jwtService.generateToken(user.get());
+           return new AuthenticationResponse(token);
+       }
+       throw new ValidationException("User doesnt exists");
+
     }
 
-    public User updateUser(String username,User request){
+    public User updateUser(String username ,User request){
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
