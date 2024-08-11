@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Note> notes = new ArrayList<>();
 
+    @Column(name = "access_token")
+    private String accessToken;
+
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 

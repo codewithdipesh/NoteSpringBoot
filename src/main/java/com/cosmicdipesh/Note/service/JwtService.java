@@ -1,6 +1,7 @@
 package com.cosmicdipesh.Note.service;
 
 import com.cosmicdipesh.Note.entity.User;
+import com.cosmicdipesh.Note.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -19,13 +21,24 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
 
+    private final UserRepository userRepository;
+
+    public JwtService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+
     public String extractUsername(String token) {
         return extractclaims(token, Claims::getSubject);
     }
 
-    public boolean isValid(String token, UserDetails user){
+    public boolean isValid(String token, UserDetails userdetails){
         String username = extractUsername(token);
-        return (username.equals(user.getUsername())) && !isTokenExpired(token);
+        //check the jwt token
+        Optional<User> user = userRepository.findByUsername(username); //user will be not null bcz its already checked
+        return (username.equals(userdetails.getUsername()))
+                && (token.equals(user.get().getAccessToken()))
+                && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

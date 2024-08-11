@@ -32,7 +32,6 @@ public class Note {
     @Column(name = "description")
     @NonNull
     private String description;
-
     @CreatedDate
     private LocalDate createdAt = LocalDate.now();
 

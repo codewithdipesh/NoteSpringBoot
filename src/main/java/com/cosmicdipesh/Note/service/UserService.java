@@ -42,8 +42,10 @@ public class UserService {
             user.setUsername(request.getUsername());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole(Role.USER);
-            User savedUser = userRepository.save(user);
-            String token = jwtService.generateToken(savedUser);
+            String token = jwtService.generateToken(user);
+            user.setAccessToken(token);
+            userRepository.save(user);
+
             return new AuthenticationResponse(token);
         }
 
@@ -64,6 +66,8 @@ public class UserService {
         Optional<User> user = userRepository.findByUsername(request.getUsername());
        if(user.isPresent()){
            String token = jwtService.generateToken(user.get());
+           user.get().setAccessToken(token);
+           userRepository.save(user.get());
            return new AuthenticationResponse(token);
        }
        throw new ValidationException("User doesnt exists");
