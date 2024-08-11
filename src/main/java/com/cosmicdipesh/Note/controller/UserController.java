@@ -14,17 +14,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @PutMapping("/change-password")
-    public ResponseEntity<ApiResponse<User>> updatepassword(@RequestBody ChangePasswordRequest request) {
-        System.out.println("Hi");
+    public ResponseEntity<ApiResponse<Boolean>> updatepassword(@RequestBody ChangePasswordRequest request) {
+
         String password = request.getNewPassword();
-        System.out.println(password);
+//        System.out.println(password);
        if(password == null){
            throw new ValidationException("Password cannot be null");
        }else{
@@ -35,12 +35,21 @@ public class UserController {
            user.setPassword(password);
 
            User response = userService.updateUser(username,user);
-           System.out.println(response);
-           return new ResponseEntity<ApiResponse<User>>(new ApiResponse<>("Updated successfully",response, HttpStatus.OK.value()),
+//           System.out.println(response);
+           return new ResponseEntity<>(new ApiResponse<>("Updated successfully",true, HttpStatus.OK.value()),
                    HttpStatus.OK);
        }
 
     }
+
+    @DeleteMapping("/delete_account")
+    public ResponseEntity<ApiResponse<Boolean>> deleteUser(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        userService.deleteUser(username);
+        return new ResponseEntity<>(new ApiResponse<>("User deleted Successfully",true,HttpStatus.OK.value()),
+        HttpStatus.OK);
+    }
+
 
 
 }

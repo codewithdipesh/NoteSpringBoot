@@ -34,11 +34,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InvalidJwtException.class)
-    public ResponseEntity<ApiResponse<String>> handleInvalidJwtException(InvalidJwtException ex) {
-        ApiResponse<String> response = new ApiResponse<>(ex.getMessage(), null, HttpStatus.UNAUTHORIZED.value());
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
 
 
 }

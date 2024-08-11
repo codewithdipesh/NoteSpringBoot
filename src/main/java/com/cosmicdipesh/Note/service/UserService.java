@@ -74,7 +74,8 @@ public class UserService {
     }
 
     public boolean deleteUser(String username){
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         userRepository.delete(user);
         return true;
     }

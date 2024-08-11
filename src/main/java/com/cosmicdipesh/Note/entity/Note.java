@@ -1,13 +1,17 @@
 package com.cosmicdipesh.Note.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Note_table")
@@ -27,13 +31,15 @@ public class Note {
 
     @Column(name = "description")
     @NonNull
-    private String decription;
+    private String description;
 
     @CreatedDate
     private LocalDate createdAt = LocalDate.now();
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
 
