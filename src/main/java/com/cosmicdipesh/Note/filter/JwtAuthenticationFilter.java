@@ -45,10 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+
         String path = request.getRequestURI();
 
         // Only apply JWT authentication filter to paths that start with "/user" or "/note"
-        if (path.startsWith("/api/v1/user") || path.startsWith("api/v1/note")) {
+        if (path.startsWith("/api/v1/user") || path.startsWith("/api/v1/note")) {
             String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 setErrorResponse(response, "Invalid JWT token", HttpStatus.UNAUTHORIZED.value());
