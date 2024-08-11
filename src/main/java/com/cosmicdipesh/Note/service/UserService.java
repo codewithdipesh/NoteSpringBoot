@@ -10,6 +10,7 @@ import com.cosmicdipesh.Note.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.configurers.SecurityContextConfigurer;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,12 +50,18 @@ public class UserService {
     }
 
     public AuthenticationResponse login(User request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword())
-        );
-       Optional<User> user = userRepository.findByUsername(request.getUsername());
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            // This will catch BadCredentialsException and other authentication-related exceptions
+            throw new ValidationException("Invalid username or password");
+        }
+
+        Optional<User> user = userRepository.findByUsername(request.getUsername());
        if(user.isPresent()){
            String token = jwtService.generateToken(user.get());
            return new AuthenticationResponse(token);

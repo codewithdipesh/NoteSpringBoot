@@ -37,7 +37,7 @@ public class publicController {
     }
 
 
-    @GetMapping("/health-check")
+    @GetMapping("/")
     public ResponseEntity<String> healthcheck() {
         return new ResponseEntity<>(
                 "Server is up and running",
