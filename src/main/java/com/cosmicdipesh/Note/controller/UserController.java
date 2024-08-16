@@ -1,5 +1,6 @@
 package com.cosmicdipesh.Note.controller;
 
+import com.cosmicdipesh.Note.ExceptionHandler.UnauthorizedException;
 import com.cosmicdipesh.Note.ExceptionHandler.ValidationException;
 import com.cosmicdipesh.Note.entity.ApiResponse;
 import com.cosmicdipesh.Note.entity.AuthenticationResponse;
@@ -48,6 +49,16 @@ public class UserController {
         userService.deleteUser(username);
         return new ResponseEntity<>(new ApiResponse<>("User deleted Successfully",true,HttpStatus.OK.value()),
         HttpStatus.OK);
+    }
+
+    @GetMapping("/authenticate")
+    public ResponseEntity<ApiResponse<Boolean>> authenticate(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(username == null){
+            throw new UnauthorizedException("UnAuthenticated User");
+        }
+        return new ResponseEntity<>(new ApiResponse<>("authorized",true,HttpStatus.OK.value()),
+                HttpStatus.OK);
     }
 
 

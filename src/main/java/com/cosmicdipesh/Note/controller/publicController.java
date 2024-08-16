@@ -19,7 +19,7 @@ public class publicController {
 
     @PostMapping("/create-new")
     public ResponseEntity<ApiResponse<String>> addUser(@RequestBody User user) {
-        if(user.getUsername() == null || user.getPassword() == null){
+        if(user.getUsername() == null || user.getPassword() == null || user.getUsername().isEmpty() || user.getPassword().isEmpty() ){
             throw new ValidationException("Username and password are required");
         }
         AuthenticationResponse response = userService.register(user);
@@ -28,7 +28,7 @@ public class publicController {
     }
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> loginUser(@RequestBody User user) {
-        if(user.getUsername() == null || user.getPassword() == null){
+        if(user.getUsername() == null || user.getPassword() == null || user.getUsername().isEmpty() || user.getPassword().isEmpty() ){
             throw new ValidationException("Username and password are required");
         }
         AuthenticationResponse response = userService.login(user);

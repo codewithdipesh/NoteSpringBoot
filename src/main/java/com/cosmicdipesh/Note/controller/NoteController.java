@@ -1,5 +1,6 @@
 package com.cosmicdipesh.Note.controller;
 
+import com.cosmicdipesh.Note.ExceptionHandler.UnauthorizedException;
 import com.cosmicdipesh.Note.ExceptionHandler.ValidationException;
 import com.cosmicdipesh.Note.entity.ApiResponse;
 import com.cosmicdipesh.Note.entity.ChangePasswordRequest;
@@ -39,7 +40,7 @@ public class NoteController {
             User User = userRepository.findByUsername(username).orElse(null);
 
             if(User == null){
-                throw new ValidationException("UnAuthorized");
+                throw new UnauthorizedException("UnAuthorized");
             }
             Note savedNote = noteService.save(note,User);
 
@@ -56,7 +57,7 @@ public class NoteController {
         User User = userRepository.findByUsername(username).orElse(null);
 
         if(User == null){
-            throw new ValidationException("UnAuthorized");
+            throw new UnauthorizedException("UnAuthorized");
         }
         return new ResponseEntity<>(new ApiResponse<>("Notes fetched Successfully",User.getNotes(),HttpStatus.OK.value())
                 ,HttpStatus.OK);
@@ -75,7 +76,7 @@ public class NoteController {
             if(previousNote == null ) throw  new ValidationException("Note not found");
             //note owner is different
             if(!Objects.equals(username, previousNote.getUser().getUsername())){
-               throw new ValidationException("UnAuthorized");
+               throw new UnauthorizedException("UnAuthorized");
             }
             Note updated = noteService.updateNote(noteId,note).orElse(null);
             if(updated == null) throw new ValidationException("Note not found");
@@ -94,7 +95,7 @@ public class NoteController {
             if(previousNote == null ) throw  new ValidationException("Note not found");
             //note owner is different
             if(!Objects.equals(username, previousNote.getUser().getUsername())){
-                throw new ValidationException("UnAuthorized");
+                throw new UnauthorizedException("UnAuthorized");
             }
             Boolean deleted = noteService.deleteNote(noteId);
             return new ResponseEntity<>(new ApiResponse<>("Note Deleted Successfully",deleted,HttpStatus.OK.value()),
