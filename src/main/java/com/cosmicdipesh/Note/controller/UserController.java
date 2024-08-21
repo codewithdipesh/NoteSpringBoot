@@ -61,6 +61,16 @@ public class UserController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/getUsername")
+    public ResponseEntity<ApiResponse<String>> getUsername(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(username == null){
+            throw new UnauthorizedException("UnAuthenticated User");
+        }
+        return new ResponseEntity<>(new ApiResponse<>("OK",username,HttpStatus.OK.value()),
+                HttpStatus.OK);
+    }
+
 
 
 }
