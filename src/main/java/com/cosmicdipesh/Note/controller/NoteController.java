@@ -84,6 +84,23 @@ public class NoteController {
                     HttpStatus.OK);
         }
     }
+    @GetMapping("/{noteId}")
+    public ResponseEntity<ApiResponse<Note>> getNote(@PathVariable Integer noteId) {
+        if(noteId == null){
+            throw new ValidationException("Note id is required");
+        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Note note = noteRepository.findById(noteId).orElse(null);
+        if(note == null ) throw  new ValidationException("Note not found");
+        //note owner is different
+        if(!Objects.equals(username, note.getUser().getUsername())){
+            throw new UnauthorizedException("UnAuthorized");
+        }
+        return new ResponseEntity<>(new ApiResponse<>("Note Fetched Successfully",note,HttpStatus.OK.value()),
+                HttpStatus.OK);
+
+
+    }
     @DeleteMapping("/{noteId}")
     public ResponseEntity<ApiResponse<Boolean>> deleteNote(@PathVariable Integer noteId) {
         if(noteId == null){
@@ -102,6 +119,26 @@ public class NoteController {
                     HttpStatus.OK);
         }
     }
+//    @PutMapping("/{noteId}/toggle-lock")
+//    public ResponseEntity<ApiResponse<Boolean>> toggleLock(@PathVariable Integer noteId) {
+//        if(noteId == null){
+//            throw new ValidationException("Note id is required");
+//        }
+//        else{
+//            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//            Note note = noteRepository.findById(noteId).orElse(null);
+//            if(note == null ) throw  new ValidationException("Note not found");
+//            //note owner is different
+//            if(!Objects.equals(username, note.getUser().getUsername())){
+//                throw new UnauthorizedException("UnAuthorized");
+//            }
+//            Boolean updated = noteService.toggleLockStatus(noteId,!note.getIsLocked());
+//            return new ResponseEntity<>(new ApiResponse<>("Note Lock toggled successfully",updated,HttpStatus.OK.value()),
+//                    HttpStatus.OK);
+//        }
+//    }
+
+
 
 
 }

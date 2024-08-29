@@ -32,8 +32,17 @@ public class Note {
     @Column(name = "description")
     @NonNull
     private String description;
+
+    @Column(name = "isLocked")
+    @NonNull
+    private Boolean isLocked =false;
+
+    @Column(name = "isFavorite")
+    @NonNull
+    private Boolean isFavorite = false;
+
     @CreatedDate
-    private LocalDate createdAt = LocalDate.now();
+    private String createdAt = String.valueOf(LocalDate.now());
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
