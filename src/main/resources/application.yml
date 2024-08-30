@@ -17,3 +17,6 @@ logging:
   level:
     org.springframework: INFO
     org.hibernate: WARN
+server:
+  address: 0.0.0.0
+  port: ${PORT}:8080
