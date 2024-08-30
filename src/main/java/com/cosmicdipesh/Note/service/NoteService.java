@@ -36,6 +36,7 @@ public class NoteService {
         return noteRepository.findById(noteId)
                 .map(existingNote -> {
                     existingNote.setTitle(updatedNote.getTitle());
+                    existingNote.setDescription(updatedNote.getDescription());
                     existingNote.setIsFavorite(updatedNote.getIsFavorite() != null ? updatedNote.getIsFavorite() : existingNote.getIsFavorite());
                     existingNote.setIsLocked(updatedNote.getIsLocked() != null ? updatedNote.getIsLocked() : existingNote.getIsLocked());
                     // Don't update the user or createdAt fields
